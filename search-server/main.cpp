@@ -27,13 +27,13 @@ vector<string> SplitIntoWords(const string& text) {
     vector<string> words;
     string word;
     for (const char c : text) {
-        if (c  =  =  ' ') {
+        if (c  ==  ' ') {
             if (!word.empty()) {
                 words.push_back(word);
                 word.clear();
             }
         } else {
-            word + =  c;
+            word +=  c;
         }
     }
     if (!word.empty()) {
@@ -66,7 +66,7 @@ public:
         const vector<string> words = SplitIntoWordsNoStop(document);
         const double inv_count = 1.0/words.size();
         for (const string& word : words) {
-            documents_[word][document_id]+ = inv_count;
+            documents_[word][document_id]+= inv_count;
         }   
         
         doc_count_++;
@@ -113,7 +113,7 @@ private:
     ParsedQuery ParseQuery(const string& text) const {
         ParsedQuery query_words;
         for (const string& word : SplitIntoWordsNoStop(text)) {
-             if (word[0] =  = '-') {
+             if (word[0] == '-') {
                  query_words.minus_words.insert(word.substr(1));
                  
              }
@@ -151,12 +151,12 @@ private:
         
         for (const string& word : query_words.words) {
             int found_doc = 0;
-            if (content.find(word)! = content.end()){
+            if (content.find(word)!= content.end()){
             found_doc = content.at(word).size();
             
             idf = ComputeWordInverseDocumentFreq(doc_count, found_doc);                
             for ( const auto &[id, tf]: content.at(word)){
-                    rel_doc[id]+ = tf*idf;
+                    rel_doc[id]+= tf*idf;
                     
                 }    
            // cout<<"word = "<<word<<" count of doc with = "<<found_doc<<" IFD = "<<idf<<" TF-ID = "<< idf<<endl;        
@@ -164,7 +164,7 @@ private:
             }
         }
         for (const string& word : query_words.minus_words) {
-                if (content.find(word)! = content.end()){
+                if (content.find(word)!= content.end()){
                     for ( const auto&[id, tf]: content.at(word)){
                         rel_doc.erase(id);
                     }
