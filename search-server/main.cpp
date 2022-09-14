@@ -27,13 +27,13 @@ vector<string> SplitIntoWords(const string& text) {
     vector<string> words;
     string word;
     for (const char c : text) {
-        if (c == ' ') {
+        if (c  =  =  ' ') {
             if (!word.empty()) {
                 words.push_back(word);
                 word.clear();
             }
         } else {
-            word += c;
+            word + =  c;
         }
     }
     if (!word.empty()) {
@@ -45,7 +45,6 @@ vector<string> SplitIntoWords(const string& text) {
 
 struct Document {
     int id;
-    //int count_of_words;
     double relevance;
 };
 struct ParsedQuery{
@@ -62,22 +61,13 @@ public:
     }
 
     void AddDocument(int document_id, const string& document) {
-        int word_doc_count=0;
         map <string, int> temp;
-        for (const string word : SplitIntoWordsNoStop(document)){
-            word_doc_count++;
-            temp[word]++;
-            //documents_[word].insert({document_id,0.0});
-           //cout << "added id=" <<document_id<<" word added: "<<word<<" size of word="<<documents_[word].size()<<endl;
-        }
-        //documents_[word].[documents_id]=word_doc_count;
-     //   cout<<word_doc_count<<" words in document"<<endl;
-        //int i=0;
-        for (const string word : SplitIntoWordsNoStop(document)){
-            documents_[word].insert({document_id,(double)temp[word]/(double)word_doc_count});
-            
-      //     cout << "111 added id=" <<document_id<<" word added: "<<word<<" TF="<<(double)temp[word]/(double)word_doc_count<<endl;
-        }
+        
+        const vector<string> words = SplitIntoWordsNoStop(document);
+        const double inv_count = 1.0/words.size();
+        for (const string& word : words) {
+            documents_[word][document_id]+ = inv_count;
+        }   
         
         doc_count_++;
     }
@@ -97,15 +87,13 @@ public:
     }
 
 private:
-    /*struct DocumentContent {
-        int id = 0;
-        vector<string> words;
-    };*/
-
+    
+    
     map<string, map<int, double>> documents_;
 
+
     set<string> stop_words_;
-    int doc_count_=0;
+    int doc_count_ = 0;
     
 
     bool IsStopWord(const string& word) const {
@@ -125,9 +113,9 @@ private:
     ParsedQuery ParseQuery(const string& text) const {
         ParsedQuery query_words;
         for (const string& word : SplitIntoWordsNoStop(text)) {
-             if (word[0]=='-') {
+             if (word[0] =  = '-') {
                  query_words.minus_words.insert(word.substr(1));
-                 //cout << "Minus word:" << word.substr(1) << endl;
+                 
              }
             else{
              query_words.words.insert(word);
@@ -138,7 +126,6 @@ private:
 
     vector<Document> FindAllDocuments(ParsedQuery& query_words) const {
         vector<Document> matched_documents;
-        //map <int, int> relevance;
             
         if (!query_words.words.empty()) {
            
@@ -152,39 +139,34 @@ private:
        
     }
 
-    static map<int, double> MatchDocument(const map<string, map <int, double>> & content, const ParsedQuery& query_words, int doc_count) {
-        //if (query_words.words.empty()) {
-        //    return {0, 0};
-        //}
+   static double ComputeWordInverseDocumentFreq(const int doc_count, int found_doc){
+        return log(doc_count*1.0/found_doc*1.0);
+    }
         
+    static map<int, double> MatchDocument(const map<string, map <int, double>> & content, const ParsedQuery& query_words, int doc_count) {
+                
         set<string> matched_words;
         map <int, double> rel_doc;
-        double idf=0;
+        double idf = 0;
         
         for (const string& word : query_words.words) {
-            //cout << "Finding word=" <<word<<endl;
-            int found_doc=0;
-            if (content.find(word)!=content.end()){
-            //    for ( auto[i, j]: content.at(word)){
-                    //rel_doc[i]=j;
-                  //cout << "Finding id=" <<i<<" word found: "<<word<<" rel="<<rel_doc[i]<<endl;  
-             //   found_doc++;    
-             //   }
-            found_doc=content.at(word).size();
-            idf=log((double)doc_count/found_doc);
-            for ( auto[i, j]: content.at(word)){
-                    rel_doc[i]+=j*idf;
-                  //cout << "Finding id=" <<i<<" word found: "<<word<<" TF="<<j<<" IDF="<<idf<< " TF-IDF="<<rel_doc[i]<<endl;  
+            int found_doc = 0;
+            if (content.find(word)! = content.end()){
+            found_doc = content.at(word).size();
+            
+            idf = ComputeWordInverseDocumentFreq(doc_count, found_doc);                
+            for ( const auto &[id, tf]: content.at(word)){
+                    rel_doc[id]+ = tf*idf;
                     
                 }    
-           // cout<<"word="<<word<<" count of doc with="<<found_doc<<" IFD="<<idf<<" TF-ID="<< idf<<endl;        
+           // cout<<"word = "<<word<<" count of doc with = "<<found_doc<<" IFD = "<<idf<<" TF-ID = "<< idf<<endl;        
                 
             }
         }
         for (const string& word : query_words.minus_words) {
-                if (content.find(word)!=content.end()){
-                    for ( auto[i, j]: content.at(word)){
-                        rel_doc.erase(i);
+                if (content.find(word)! = content.end()){
+                    for ( const auto&[id, tf]: content.at(word)){
+                        rel_doc.erase(id);
                     }
                 }
         }
