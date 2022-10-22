@@ -7,10 +7,11 @@
 #include <string>
 #include <utility>
 #include <vector>
-
+#include <numeric>
 using namespace std;
 
 const int MAX_RESULT_DOCUMENT_COUNT = 5;
+const double MIN_RELEVANCE = 1e-6;
 
 string ReadLine() {
     string s;
@@ -126,7 +127,8 @@ public:
 
         sort(matched_documents.begin(), matched_documents.end(),
             [](const Document& lhs, const Document& rhs) {
-                if (abs(lhs.relevance - rhs.relevance) < 1e-6) {
+                if (abs(lhs.relevance - rhs.relevance) < MIN_RELEVANCE)
+                {
                     return lhs.rating > rhs.rating;
                 }
                 else {
@@ -208,10 +210,8 @@ private:
         if (ratings.empty()) {
             return 0;
         }
-        int rating_sum = 0;
-        for (const int rating : ratings) {
-            rating_sum += rating;
-        }
+        int rating_sum = accumulate(ratings.begin(), ratings.end(), 0);
+
         return rating_sum / static_cast<int>(ratings.size());
     }
 
@@ -313,7 +313,7 @@ void PrintDocument(const Document& document) {
         << "rating = "s << document.rating << " }"s << endl;
 }
 int main() {
-    SearchServer search_server("и в на"s); 
+    SearchServer search_server("и в на \x12"s);
     // Явно игнорируем результат метода AddDocument, чтобы избежать предупреждения
     // о неиспользуемом результате его вызова
     search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, { 7, 2, 7 });
