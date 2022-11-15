@@ -3,17 +3,17 @@
 
 
 
-    std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentStatus status) {
-        std::vector<Document> d;
+std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentStatus status) {
+        std::vector<Document> doc;
 
-        d = search_server_->FindTopDocuments(raw_query,
+        doc = search_server_->FindTopDocuments(raw_query,
             status);
         if (requests_.size() == min_in_day_) { requests_.pop_front(); }
         QueryResult qr;
-        qr.results_num = d.size();
+        qr.results_num = doc.size();
         qr.query = raw_query;
         requests_.push_back(qr);
-        return d;
+        return doc;
         
     }
     std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query) {
