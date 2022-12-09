@@ -10,6 +10,7 @@
 #include "string_processing.h"
 #include "document.h"
 #include "read_input_functions.h"
+//#include "paginator.h"
 
 using namespace std::literals::string_literals;
 
@@ -47,7 +48,14 @@ public:
 
     int GetDocumentCount() const;
 
-    int GetDocumentId(int index) const;
+    //int GetDocumentId(int index) const;
+
+    std::vector<int>::iterator begin();
+    std::vector<int>::iterator end();
+
+    const std::map<std::string, double>& GetWordFrequencies(int document_id) const;
+    void RemoveDocument(int document_id);
+
 
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
 
@@ -71,6 +79,7 @@ private:
 
     const std::set<std::string> stop_words_;
     std::map<std::string, std::map<int, double>> word_to_document_freqs_;
+    std::map<int, std::map<std::string, double>> doc_to_word_freqs_;
     std::map<int, DocumentData> documents_;
     std::vector<int> document_ids_;
 

@@ -3,6 +3,8 @@
 #include <iostream>
 #include "document.h"
 
+using namespace  std::literals; // ::string_literals;
+
 template <typename Iterator>
 class IteratorRange {
     Iterator first_;
