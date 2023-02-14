@@ -17,12 +17,6 @@ public:
         const lock_guard<mutex> guard;
         Value& ref_to_value;
 
-
-        // Access( const lock_guard<mutex>& mut, Value& val) :guard(mut), ref_to_value(val)  {
-        // }
-
-
-
     };
 
     explicit ConcurrentMap(size_t bucket_count) : data_(bucket_count) {
@@ -31,7 +25,7 @@ public:
     }
 
     void erase(const Key& key) {
-        uint64_t index =/*static_cast<uint64_t>*/(key) % data_.size();
+        uint64_t index =key%data_.size();
         lock_guard<mutex> guard(data_[index].mutex_val);
         data_[index].dict.erase(key);
 
@@ -43,14 +37,7 @@ public:
     }
 
     Access operator[](const Key& key) {
-        uint64_t index =/*static_cast<uint64_t>*/(key) % data_.size();
-        //{
-          //  lock_guard guard(data_[key % bucket_num].mutex_val);
-            //if (data_[key % bucket_num].dict.count(key) == 0) {
-            //    data_[key % bucket_num].dict.emplace(key, Value());
-            //}
-        //}
-        //return Access(guard, data_[key%bucket_num].dict[key]);
+        uint64_t index =key % data_.size();
         return { lock_guard(data_[index].mutex_val), data_[index].dict[key] };
     }
     std::map<Key, Value> BuildOrdinaryMap() {
@@ -77,8 +64,5 @@ private:
 
 
     vector<Basket> data_;
-    //size_t bucket_num;
-
-
 
 };
