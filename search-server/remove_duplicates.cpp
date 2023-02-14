@@ -6,12 +6,12 @@
 #include <iostream>
 
 void RemoveDuplicates(SearchServer& s) {
-    std::map<std::set<std::string>, std::vector<int>> docs_info;
+    std::map<std::set<std::string_view>, std::vector<int>> docs_info;
     std::set<int> duplicate_ids;
 
 
     for (auto id : s) {
-        std::set<std::string> read_words;
+        std::set<std::string_view> read_words;
         auto info = s.GetWordFrequencies(id);
         for (auto s : info) {
             read_words.insert(s.first);
