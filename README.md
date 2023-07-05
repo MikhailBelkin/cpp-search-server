@@ -1,2 +1,2 @@
 # cpp-search-server
-Финальный проект: поисковый сервер
+Search server backend. Supprot parallel requests
