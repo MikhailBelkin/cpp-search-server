@@ -28,15 +28,3 @@ void RemoveDuplicates(SearchServer& s) {
 
 
 
-    /*for (auto i : docs_info) {
-        for (auto j : docs_info) {
-            if (i.first != j.first && i.second == j.second && !j.second.empty()) {
-                std::cout << "Found duplicate document id " << j.first << std::endl;
-                s.RemoveDocument(j.first);
-                docs_info[j.first].clear();
- 
-            }
-        }
-    }
-    
-}*/

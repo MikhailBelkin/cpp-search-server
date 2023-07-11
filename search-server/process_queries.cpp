@@ -50,7 +50,6 @@ std::vector<Document> ProcessQueriesJoined(
         }
     }
 
-   // std::transform(execution::par, result.begin(), result.end(), joined_doc.begin(), )
     return joined_doc;
 
 }
