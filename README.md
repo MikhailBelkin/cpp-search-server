@@ -1,5 +1,15 @@
 # cpp-search-server
-Search server backend. Supprot parallel requests
+Search server backend and fomt end. Supprot parallel requests
+
+New version of serarch server contains simple frontend:
+
+Custom TCP Server based on boost::asio.
+Usage search-server <port number>
+Be able to use telnet or terminal as client
+You need just type key words and server show relevance documents.
+"show" - command shows all typed requests
+"quit" - exit from terminal and close connetion
 
 
-Build C++17
+Build with C++17
+Using Boost C++ library
