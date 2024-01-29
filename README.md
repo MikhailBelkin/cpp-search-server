@@ -1,5 +1,5 @@
 # cpp-search-server
-Search server backend and fomt end. Supprot parallel requests
+Search server backend and front end. Supprot parallel requests
 
 New version of serarch server contains simple frontend:
 
